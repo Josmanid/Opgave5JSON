@@ -31,7 +31,7 @@ namespace Opgave5JSON
                 // check if we got anything to work with/deserialize
                 if (string.IsNullOrWhiteSpace(jMessage))
                 {
-                    writer.WriteLine("Empty or invalid request");
+                    writer.WriteLine("Ups empty json sent!");
                     return;
                 }
 
