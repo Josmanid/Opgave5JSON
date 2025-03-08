@@ -22,14 +22,23 @@ namespace Opgave5JSON
 
 
 
-           
+
+            try
+            {
 
                 //read incoming Json string
-                string jMessage = reader.ReadLine(); 
+                string jMessage = reader.ReadLine();
+                // check if we got anything to work with/deserialize
+                if (string.IsNullOrWhiteSpace(jMessage))
+                {
+                    writer.WriteLine("Empty or invalid request");
+                    return;
+                }
+
                 //convert to object for easier manipulation
                 Answers answerobj = JsonSerializer.Deserialize<Answers>(jMessage);
                 Console.WriteLine("Client sent: " + jMessage);
-               
+
                 switch (answerobj.Method)
                 {
                     //step 1
@@ -38,7 +47,7 @@ namespace Opgave5JSON
                         // use the incoming converted JSON object
                         Random random = new Random();
                         int randomNumber = random.Next(answerobj.Tal1, answerobj.Tal2 + 1);
-                        
+
                         // Create a response object
                         Answers response = new Answers
                         {
@@ -47,14 +56,14 @@ namespace Opgave5JSON
                             Tal2 = answerobj.Tal2,
                             Result = randomNumber
                         };
-                        
+
                         //convert back to Json string so that we can send it as it came! 
-                        string JsonResultRandom = JsonSerializer.Serialize(response); 
+                        string JsonResultRandom = JsonSerializer.Serialize(response);
                         writer.WriteLine(JsonResultRandom);
 
                         break;
                     case "Add":
-                     
+
                         int addResult = (answerobj.Tal2 + answerobj.Tal1);
                         Answers response2 = new Answers
                         {
@@ -81,14 +90,24 @@ namespace Opgave5JSON
                     default:
                         writer.WriteLine("Not a valid protocol input");
                         break;
-                        
+
 
                 }
 
-            
 
-            socket.Close();
-
+            }
+            catch (JsonException)
+            {
+                writer.WriteLine("Ups! Some typo in the JSON!");
+            }
+            catch (ArgumentNullException)
+            {
+                writer.WriteLine("You sent nothing to the server");
+            }
+            finally
+            {
+                socket.Close();
+            }
         }
     }
 }
