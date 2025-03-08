@@ -22,8 +22,7 @@ namespace Opgave5JSON
 
 
 
-            while (true)
-            {
+           
 
                 //read incoming Json string
                 string jMessage = reader.ReadLine(); 
@@ -68,10 +67,10 @@ namespace Opgave5JSON
                         writer.WriteLine(jsonResultAdd);
                         break;
                     case "Subtract":
-                        int subtractResult = (answerobj.Tal1 - answerobj.Tal2);
+                        int subtractResult = (answerobj.Tal2 - answerobj.Tal1);
                         Answers response3 = new Answers
                         {
-                            Method = "Add",
+                            Method = "Subtract",
                             Tal1 = answerobj.Tal1,
                             Tal2 = answerobj.Tal2,
                             Result = subtractResult
@@ -86,7 +85,7 @@ namespace Opgave5JSON
 
                 }
 
-            }
+            
 
             socket.Close();
 
